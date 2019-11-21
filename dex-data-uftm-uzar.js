@@ -30,7 +30,8 @@ function fillOrders() {
   }
 
 
-  command = "xarcli tx order post 1 "+side+" "+price+" "+quantity+" 600 --from xar-validator-12 --chain-id=xar-chain-panda-12 -y"
+  command = "xarcli tx order post 1 "+side+" "+price+" "+quantity+" 600 --from zafx --chain-id=xar-chain-zafx -y"
+  console.log(command)
   exec(command, (err, stdout, stderr) => {
     if (err) {
       // node couldn't execute the command
