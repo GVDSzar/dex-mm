@@ -122,12 +122,12 @@ function fillOrders() {
       var sequence = json.result.value.sequence
       flip = getRandomInt(2)
       side = "bid"
-      price = getRandomIntInclusive(100000,1637799)
+      price = getRandomIntInclusive(1000000,1637799)
       quantity = getRandomIntInclusive(1000000,10000000)
 
       if (flip==0) {
         side = "ask"
-        price = getRandomIntInclusive(1607701,20000000)
+        price = getRandomIntInclusive(1607701,2000000)
         quantity = getRandomIntInclusive(1000000,10000000)
       }
 
