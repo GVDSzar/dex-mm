@@ -95,7 +95,7 @@ function sendRawTransaction(signedBz, callback) {
   axios.request(options)
   .then((res) => {
     console.log(res.data)
-    setTimeout(callback, 1000);
+    setTimeout(callback, 3000);
   })
   .catch((error) => {
     console.error(error)
