@@ -18,14 +18,31 @@ const CURVE = "secp256k1"
 
 */
 
+fillOrders()
+setInterval(getTargetPrice, 3600000)
+
 const market = "ueur/uzar"
-const targetprice = 1631000000
+var targetPrice = 1630911300
+var marketID = 2
+var account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
+var timestamp = Math.floor(new Date() / 1000)
 
 const generatePubKey = privateKey => {
   const curve = new EC(CURVE)
   const keypair = curve.keyFromPrivate(privateKey)
   const pubKeyHex = keypair.getPublic(true, 'hex')
   return {type:"tendermint/PubKeySecp256k1",value:Buffer.from(pubKeyHex, 'hex').toString('base64')}
+}
+
+function getTargetPrice() {
+  now = Math.floor(new Date() / 1000)
+  axios.get("http://data.fixer.io/api/latest?access_key=867b03f74fab8e1df36a43df989641cb&format=1&base=eur")
+  .then((res) => {
+    targetPrice = res.data.rates.ZAR*100000000
+  })
+  .catch((error) => {
+    console.error(error)
+  })
 }
 
 const sortObject = obj => {
@@ -103,11 +120,10 @@ function sendRawTransaction(signedBz, callback) {
 }
 
 //setInterval(fillOrders, 1000)
-fillOrders()
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk', function (error, response, body) {
+  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -122,20 +138,20 @@ function matchOrder() {
       var sequence = json.result.value.sequence
       flip = getRandomInt(2)
       side = "bid"
-      price = getRandomIntInclusive(1631000000,1690000000)
+      price = getRandomIntInclusive(targetPrice,Math.floor(targetPrice*1.1))
       quantity = getRandomIntInclusive(100000000,1000000000)
 
       if (flip==1) {
         side = "ask"
-        price = getRandomIntInclusive(1600000000,1631000000)
+        price = getRandomIntInclusive(Math.floor(targetPrice*0.9),targetPrice)
         quantity = getRandomIntInclusive(100000000,1000000000)
       }
 
       var msg = {
         value: {
           Direction: side.toUpperCase(),
-          MarketID: "2",
-          Owner: "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk",
+          MarketID: marketID,
+          Owner: account,
           Price: price.toString(),
           Quantity: quantity.toString(),
           TimeInForce: 600,
@@ -152,7 +168,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk', function (error, response, body) {
+  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -167,20 +183,20 @@ function fillOrders() {
       var sequence = json.result.value.sequence
       flip = getRandomInt(2)
       side = "bid"
-      price = getRandomIntInclusive(1000000000,1631000000)
+      price = getRandomIntInclusive(Math.floor(targetPrice*0.1),targetPrice)
       quantity = getRandomIntInclusive(100000000,1000000000)
 
       if (flip==1) {
         side = "ask"
-        price = getRandomIntInclusive(1631000000,2000000000)
+        price = getRandomIntInclusive(targetPrice,Math.floor(targetPrice*2))
         quantity = getRandomIntInclusive(100000000,1000000000)
       }
 
       var msg = {
         value: {
           Direction: side.toUpperCase(),
-          MarketID: "2",
-          Owner: "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk",
+          MarketID: marketID,
+          Owner: account,
           Price: price.toString(),
           Quantity: quantity.toString(),
           TimeInForce: 600,
