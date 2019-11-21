@@ -9,6 +9,11 @@ const PKEY = ''
 
 const EC = require('elliptic').ec;
 const CURVE = "secp256k1"
+const market = "ueur/uzar"
+var targetPrice = 1630911300
+const marketID = 2
+const account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
+var timestamp = Math.floor(new Date() / 1000)
 /*
 
 - id: "1"
@@ -21,11 +26,7 @@ const CURVE = "secp256k1"
 fillOrders()
 setInterval(getTargetPrice, 3600000)
 
-const market = "ueur/uzar"
-var targetPrice = 1630911300
-var marketID = 2
-var account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
-var timestamp = Math.floor(new Date() / 1000)
+
 
 const generatePubKey = privateKey => {
   const curve = new EC(CURVE)
