@@ -123,12 +123,12 @@ function fillOrders() {
       flip = getRandomInt(2)
       side = "bid"
       price = getRandomIntInclusive(1000000,1637799)
-      quantity = getRandomIntInclusive(1000000,10000000)
+      quantity = getRandomIntInclusive(100000000,1000000000)
 
-      if (flip==0) {
+      if (flip==1) {
         side = "ask"
         price = getRandomIntInclusive(1607701,2000000)
-        quantity = getRandomIntInclusive(1000000,10000000)
+        quantity = getRandomIntInclusive(100000000,1000000000)
       }
 
       var msg = {
