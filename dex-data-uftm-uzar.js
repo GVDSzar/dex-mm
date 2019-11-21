@@ -78,12 +78,12 @@ function serialize(tx) {
   return JSON.stringify(stdTx)
 }
 
-function sendTransaction(signedTx) {
+function sendTransaction(signedTx, callback) {
   const signedBz = serialize(signedTx)
-  return sendRawTransaction(signedBz)
+  return sendRawTransaction(signedBz, callback)
 }
 
-function sendRawTransaction(signedBz) {
+function sendRawTransaction(signedBz, callback) {
   const options = {
     method: "post",
     url: "http://54.194.212.72:1317/txs",
@@ -95,7 +95,7 @@ function sendRawTransaction(signedBz) {
   axios.request(options)
   .then((res) => {
     console.log(res.data)
-    setTimeout(fillOrders, 1000);
+    setTimeout(callback, 1000);
   })
   .catch((error) => {
     console.error(error)
@@ -104,6 +104,51 @@ function sendRawTransaction(signedBz) {
 
 //setInterval(fillOrders, 1000)
 fillOrders()
+
+function matchOrder() {
+
+  request('http://54.194.212.72:1317/auth/accounts/xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww', function (error, response, body) {
+
+    if (error) {
+      console.log(error)
+    } else {
+      var json = ''
+      try {
+        json = JSON.parse(body)
+      } catch (err) {
+        console.log(err)
+      }
+      var account_number = json.result.value.account_number
+      var sequence = json.result.value.sequence
+      flip = getRandomInt(2)
+      side = "bid"
+      price = getRandomIntInclusive(1627700,1637799)
+      quantity = getRandomIntInclusive(100000000,1000000000)
+
+      if (flip==1) {
+        side = "ask"
+        price = getRandomIntInclusive(1607701,1627700)
+        quantity = getRandomIntInclusive(100000000,1000000000)
+      }
+
+      var msg = {
+        value: {
+          Direction: side.toUpperCase(),
+          MarketID: "1",
+          Owner: "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww",
+          Price: price.toString(),
+          Quantity: quantity.toString(),
+          TimeInForce: 600,
+        },
+        type: "order/Post",
+      }
+
+
+      broadcastTx = sign(PKEY,msg, account_number, sequence)
+      sendTransaction(broadcastTx, fillOrders)
+    }
+  })
+}
 
 function fillOrders() {
 
@@ -145,7 +190,7 @@ function fillOrders() {
 
 
       broadcastTx = sign(PKEY,msg, account_number, sequence)
-      sendTransaction(broadcastTx)
+      sendTransaction(broadcastTx, matchOrder)
     }
   })
 }
