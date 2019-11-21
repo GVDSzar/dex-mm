@@ -6,9 +6,14 @@ const SHA256 = require("crypto-js/sha256")
 const request = require('request')
 const axios = require('axios')
 const PKEY = ''
+var currencyConverter = require('ecb-exchange-rates');
 
 const EC = require('elliptic').ec;
 const CURVE = "secp256k1"
+const market = "uftm/uzar"
+var targetPrice = 14799801
+const marketID = "1"
+const account = "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww"
 /*
 
 - id: "1"
@@ -18,14 +23,28 @@ const CURVE = "secp256k1"
 
 */
 
-const market = "uftm/uzar"
-const targetprice = 1627700
+fillOrders()
+setInterval(getTargetPrice, 3600000)
+
+
 
 const generatePubKey = privateKey => {
   const curve = new EC(CURVE)
   const keypair = curve.keyFromPrivate(privateKey)
   const pubKeyHex = keypair.getPublic(true, 'hex')
   return {type:"tendermint/PubKeySecp256k1",value:Buffer.from(pubKeyHex, 'hex').toString('base64')}
+}
+
+function getTargetPrice() {
+  var settings = {};
+  settings.fromCurrency = "USD";
+  settings.toCurrency = "ZAR";
+  settings.amount = 0.01;
+  settings.accuracy = 8;
+
+  currencyConverter.convert(settings , function(data){
+    targetPrice = Math.floor(data.amount*100000000)
+  });
 }
 
 const sortObject = obj => {
@@ -103,11 +122,10 @@ function sendRawTransaction(signedBz, callback) {
 }
 
 //setInterval(fillOrders, 1000)
-fillOrders()
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww', function (error, response, body) {
+  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -122,20 +140,20 @@ function matchOrder() {
       var sequence = json.result.value.sequence
       flip = getRandomInt(2)
       side = "bid"
-      price = getRandomIntInclusive(1627700,1637799)
+      price = getRandomIntInclusive(targetPrice,Math.floor(targetPrice*1.1))
       quantity = getRandomIntInclusive(100000000,1000000000)
 
       if (flip==1) {
         side = "ask"
-        price = getRandomIntInclusive(1607701,1627700)
+        price = getRandomIntInclusive(Math.floor(targetPrice*0.9),targetPrice)
         quantity = getRandomIntInclusive(100000000,1000000000)
       }
 
       var msg = {
         value: {
           Direction: side.toUpperCase(),
-          MarketID: "1",
-          Owner: "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww",
+          MarketID: marketID,
+          Owner: account,
           Price: price.toString(),
           Quantity: quantity.toString(),
           TimeInForce: 600,
@@ -152,7 +170,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww', function (error, response, body) {
+  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -167,20 +185,20 @@ function fillOrders() {
       var sequence = json.result.value.sequence
       flip = getRandomInt(2)
       side = "bid"
-      price = getRandomIntInclusive(1000000,1637799)
+      price = getRandomIntInclusive(Math.floor(targetPrice*0.1),targetPrice)
       quantity = getRandomIntInclusive(100000000,1000000000)
 
       if (flip==1) {
         side = "ask"
-        price = getRandomIntInclusive(1607701,2000000)
+        price = getRandomIntInclusive(targetPrice,Math.floor(targetPrice*2))
         quantity = getRandomIntInclusive(100000000,1000000000)
       }
 
       var msg = {
         value: {
           Direction: side.toUpperCase(),
-          MarketID: "1",
-          Owner: "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww",
+          MarketID: marketID,
+          Owner: account,
           Price: price.toString(),
           Quantity: quantity.toString(),
           TimeInForce: 600,

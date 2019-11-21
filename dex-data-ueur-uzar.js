@@ -43,7 +43,7 @@ function getTargetPrice() {
   settings.accuracy = 8;
 
   currencyConverter.convert(settings , function(data){
-    targetPrice = data.exchangeRate*100000000
+    targetPrice = Math.floor(data.exchangeRate*100000000)
   });
 }
 
