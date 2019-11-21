@@ -11,7 +11,7 @@ const EC = require('elliptic').ec;
 const CURVE = "secp256k1"
 const market = "ueur/uzar"
 var targetPrice = 1630911300
-const marketID = 2
+const marketID = "2"
 const account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
 var timestamp = Math.floor(new Date() / 1000)
 /*
