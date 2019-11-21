@@ -6,14 +6,14 @@ const SHA256 = require("crypto-js/sha256")
 const request = require('request')
 const axios = require('axios')
 const PKEY = ''
+var currencyConverter = require('ecb-exchange-rates');
 
 const EC = require('elliptic').ec;
 const CURVE = "secp256k1"
 const market = "ueur/uzar"
-var targetPrice = 1630911300
+var targetPrice = 1636710000
 const marketID = "2"
 const account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
-var timestamp = Math.floor(new Date() / 1000)
 /*
 
 - id: "1"
@@ -36,14 +36,15 @@ const generatePubKey = privateKey => {
 }
 
 function getTargetPrice() {
-  now = Math.floor(new Date() / 1000)
-  axios.get("http://data.fixer.io/api/latest?access_key=867b03f74fab8e1df36a43df989641cb&format=1&base=eur")
-  .then((res) => {
-    targetPrice = res.data.rates.ZAR*100000000
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+  var settings = {};
+  settings.fromCurrency = "EUR";
+  settings.toCurrency = "ZAR";
+  settings.amount = 1;
+  settings.accuracy = 8;
+
+  currencyConverter.convert(settings , function(data){
+    targetPrice = data.exchangeRate*100000000
+  });
 }
 
 const sortObject = obj => {
