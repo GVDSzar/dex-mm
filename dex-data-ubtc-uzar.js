@@ -33,7 +33,7 @@ const generatePubKey = privateKey => {
 
 function getTargetPrice() {
   client.getQuotes({symbol: 'BTC'}).then(function (data) {
-    targetAmount = data.data.FTM.quote.USD.price
+    targetAmount = data.data.BTC.quote.USD.price
     var settings = {};
     settings.fromCurrency = "USD";
     settings.toCurrency = "ZAR";
