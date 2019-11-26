@@ -14,6 +14,11 @@ const market = "uftm/uzar"
 var targetPrice = 14799801
 const marketID = "1"
 const account = "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww"
+var targetAmount = 0.0118846267057
+const CoinMarketCap = require('coinmarketcap-api')
+
+const apiKey = ''
+const client = new CoinMarketCap(apiKey)
 /*
 
 - id: "1"
@@ -35,16 +40,19 @@ const generatePubKey = privateKey => {
 }
 
 function getTargetPrice() {
-  var settings = {};
-  settings.fromCurrency = "USD";
-  settings.toCurrency = "ZAR";
-  settings.amount = 0.01;
-  settings.accuracy = 8;
+  client.getQuotes({symbol: 'FTM'}).then(function (data) {
+    targetAmount = data.data.FTM.quote.USD.price
+    var settings = {};
+    settings.fromCurrency = "USD";
+    settings.toCurrency = "ZAR";
+    settings.amount = targetAmount;
+    settings.accuracy = 8;
 
-  currencyConverter.convert(settings , function(data){
-    targetPrice = Math.floor(data.amount*100000000)
-    setInterval(getTargetPrice, 3600000)
-  });
+    currencyConverter.convert(settings , function(data){
+      targetPrice = Math.floor(data.amount*100000000)
+      setInterval(getTargetPrice, 3600000)
+    });
+  }).catch(console.error)
 }
 
 const sortObject = obj => {
