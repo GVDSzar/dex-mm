@@ -11,17 +11,10 @@ var currencyConverter = require('ecb-exchange-rates');
 const EC = require('elliptic').ec;
 const CURVE = "secp256k1"
 const market = "ueur/uzar"
-var targetPrice = 1636710000
-const marketID = "2"
-const account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
-/*
+var targetPrice = 1474037063
+const marketID = "3"
+const account = "xar1cju3sgmptmz9qf2vn9s8jns7weryajng6mx7dh"
 
-- id: "1"
-  baseassetdenom: uftm
-  quoteassetdenom: uzar
-  name: uftm/uzar
-
-*/
 getTargetPrice()
 fillOrders()
 
@@ -36,7 +29,7 @@ const generatePubKey = privateKey => {
 
 function getTargetPrice() {
   var settings = {};
-  settings.fromCurrency = "EUR";
+  settings.fromCurrency = "USD";
   settings.toCurrency = "ZAR";
   settings.amount = 1;
   settings.accuracy = 8;

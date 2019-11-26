@@ -22,9 +22,8 @@ const account = "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww"
   name: uftm/uzar
 
 */
-
+getTargetPrice()
 fillOrders()
-setInterval(getTargetPrice, 3600000)
 
 
 
@@ -44,6 +43,7 @@ function getTargetPrice() {
 
   currencyConverter.convert(settings , function(data){
     targetPrice = Math.floor(data.amount*100000000)
+    setInterval(getTargetPrice, 3600000)
   });
 }
 
