@@ -13,6 +13,7 @@ const CURVE = "secp256k1"
 const market = "ueur/uzar"
 var targetPrice = 1636710000
 const marketID = "2"
+const URL = "http://34.240.203.67:1317/"
 const account = "xar1q6u5c4c8659pnme74nyv9n4xn3j888u87u3yxk"
 /*
 
@@ -105,7 +106,7 @@ function sendTransaction(signedTx, callback) {
 function sendRawTransaction(signedBz, callback) {
   const options = {
     method: "post",
-    url: "http://54.194.212.72:1317/txs",
+    url: URL+"txs",
     data: signedBz,
     headers: {
       "content-type": "text/plain",
@@ -125,7 +126,7 @@ function sendRawTransaction(signedBz, callback) {
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -170,7 +171,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)

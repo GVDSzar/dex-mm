@@ -15,6 +15,7 @@ var targetPrice = 14799801
 const marketID = "1"
 const account = "xar18x4jd345dwz49rgvjdyupghd4meg9caf0cx7ww"
 var targetAmount = 0.0118846267057
+const URL = "http://34.240.203.67:1317/"
 const CoinMarketCap = require('coinmarketcap-api')
 
 const apiKey = ''
@@ -113,7 +114,7 @@ function sendTransaction(signedTx, callback) {
 function sendRawTransaction(signedBz, callback) {
   const options = {
     method: "post",
-    url: "http://54.194.212.72:1317/txs",
+    url: URL+"txs",
     data: signedBz,
     headers: {
       "content-type": "text/plain",
@@ -133,7 +134,7 @@ function sendRawTransaction(signedBz, callback) {
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -178,7 +179,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)

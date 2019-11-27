@@ -14,6 +14,7 @@ const market = "ueur/uzar"
 var targetPrice = 1474037063
 const marketID = "3"
 const account = "xar1cju3sgmptmz9qf2vn9s8jns7weryajng6mx7dh"
+const URL = "http://34.240.203.67:1317/"
 
 getTargetPrice()
 fillOrders()
@@ -98,7 +99,7 @@ function sendTransaction(signedTx, callback) {
 function sendRawTransaction(signedBz, callback) {
   const options = {
     method: "post",
-    url: "http://54.194.212.72:1317/txs",
+    url: URL+"txs",
     data: signedBz,
     headers: {
       "content-type": "text/plain",
@@ -118,7 +119,7 @@ function sendRawTransaction(signedBz, callback) {
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -163,7 +164,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)

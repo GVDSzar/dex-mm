@@ -15,6 +15,7 @@ var targetPrice = 10790290854567
 const marketID = "4"
 const account = "xar1eg89ylerq37z9cng80qzs54euu0w45swz42tmz"
 var targetAmount = 7315.8016475
+const URL = "http://34.240.203.67:1317/"
 const CoinMarketCap = require('coinmarketcap-api')
 
 const apiKey = ''
@@ -33,6 +34,7 @@ const generatePubKey = privateKey => {
 
 function getTargetPrice() {
   client.getQuotes({symbol: 'BTC'}).then(function (data) {
+    console.log(data)
     targetAmount = data.data.BTC.quote.USD.price
     var settings = {};
     settings.fromCurrency = "USD";
@@ -105,7 +107,7 @@ function sendTransaction(signedTx, callback) {
 function sendRawTransaction(signedBz, callback) {
   const options = {
     method: "post",
-    url: "http://54.194.212.72:1317/txs",
+    url: URL+"txs",
     data: signedBz,
     headers: {
       "content-type": "text/plain",
@@ -125,7 +127,7 @@ function sendRawTransaction(signedBz, callback) {
 
 function matchOrder() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
@@ -170,7 +172,7 @@ function matchOrder() {
 
 function fillOrders() {
 
-  request('http://54.194.212.72:1317/auth/accounts/'+account, function (error, response, body) {
+  request(URL+'auth/accounts/'+account, function (error, response, body) {
 
     if (error) {
       console.log(error)
